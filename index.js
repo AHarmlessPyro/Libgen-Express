@@ -10,6 +10,8 @@ const app = express();
 
 app.use(cors);
 
+var whitelist = ['*']
+
 const currentURL = process.env.BASE;
 const jsonParser = bodyParser.json();
 const urlEncodedParser = bodyParser.urlencoded({ extended: false });
@@ -19,11 +21,11 @@ libgen.mirror().then((result) => {
     currentURL = result;
 })
 
-app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*"); // update to match the domain you will make the request from
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    next();
-  });
+// app.use(function(req, res, next) {
+//     res.header("Access-Control-Allow-Origin", "*"); // update to match the domain you will make the request from
+//     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+//     next();
+//   });
   
 
 app.get('/', (req, res) => {
