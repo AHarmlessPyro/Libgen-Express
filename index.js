@@ -8,11 +8,11 @@ const env = require('dotenv').config();
 const port = process.env.PORT || 8008;
 const app = express();
 
-app.use(cors);
+//app.use(cors);
 
 var whitelist = ['*']
 
-const currentURL = process.env.BASE;
+var currentURL = process.env.BASE;
 const jsonParser = bodyParser.json();
 const urlEncodedParser = bodyParser.urlencoded({ extended: false });
 
@@ -26,13 +26,22 @@ libgen.mirror().then((result) => {
 //     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 //     next();
 //   });
-  
 
-app.get('/', (req, res) => {
+var corsOptionsDelegate = function (req, callback) {
+    var corsOptions;
+    if (whitelist.indexOf(req.header('Origin')) !== -1) {
+        corsOptions = { origin: true } // reflect (enable) the requested origin in the CORS response
+    } else {
+        corsOptions = { origin: false } // disable CORS for this request
+    }
+    callback(null, corsOptions) // callback expects two parameters: error and options
+}
+
+app.get('/', cors(), (req, res) => {
     res.send(currentURL);
 })
 
-app.get('/arrivals/:count?', (req, res) => {
+app.get('/arrivals/:count?', cors(corsOptionsDelegate), (req, res) => {
     let arrivalsCount = process.env.MAX_ARRIVALS;
 
     if (req.params.count !== undefined) {
@@ -58,7 +67,7 @@ app.get('/arrivals/:count?', (req, res) => {
         })
 })
 
-app.get('/explore/:key=:value/:page?', (req, res) => {
+app.get('/explore/:key=:value/:page?', cors(corsOptionsDelegate), (req, res) => {
     // libgen.search({
     //     mirror:currentURL,
     //     query:req.params.value,
@@ -68,7 +77,7 @@ app.get('/explore/:key=:value/:page?', (req, res) => {
     res.send(req.params);
 })
 
-app.post('/explore', jsonParser, (req, res) => {
+app.post('/explore', cors(), jsonParser, (req, res) => {
     req.body.mirror = currentURL
     libgen.search(req.body).then((result) => {
         res.send(result);
