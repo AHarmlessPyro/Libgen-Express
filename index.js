@@ -2,16 +2,17 @@ const express = require('express');
 const libgen = require('libgen');
 const request = require('request');
 const bodyParser = require('body-parser')
+const cors = require('cors');
 const env = require('dotenv').config();
 
 const port = process.env.PORT || 8008;
 const app = express();
 
+app.use(cors);
+
+const currentURL = process.env.BASE;
 const jsonParser = bodyParser.json();
-
 const urlEncodedParser = bodyParser.urlencoded({ extended: false });
-
-var currentURL = process.env.BASE;
 
 libgen.mirror().then((result) => {
     console.log(result)
