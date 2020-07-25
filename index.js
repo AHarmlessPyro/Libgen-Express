@@ -29,21 +29,21 @@ app.options('*', cors());
 //     next();
 //   });
 
-var corsOptionsDelegate = function (req, callback) {
-    var corsOptions;
-    if (whitelist.indexOf(req.header('Origin')) !== -1) {
-        corsOptions = { origin: true } // reflect (enable) the requested origin in the CORS response
-    } else {
-        corsOptions = { origin: false } // disable CORS for this request
-    }
-    callback(null, corsOptions) // callback expects two parameters: error and options
-}
+// var corsOptionsDelegate = function (req, callback) {
+//     var corsOptions;
+//     if (whitelist.indexOf(req.header('Origin')) !== -1) {
+//         corsOptions = { origin: true } // reflect (enable) the requested origin in the CORS response
+//     } else {
+//         corsOptions = { origin: false } // disable CORS for this request
+//     }
+//     callback(null, corsOptions) // callback expects two parameters: error and options
+// }
 
 app.get('/', cors(), (req, res) => {
     res.send(currentURL);
 })
 
-app.get('/arrivals/:count?', cors(corsOptionsDelegate), (req, res) => {
+app.get('/arrivals/:count?', cors(), (req, res) => {
     let arrivalsCount = process.env.MAX_ARRIVALS;
 
     if (req.params.count !== undefined) {
@@ -69,15 +69,15 @@ app.get('/arrivals/:count?', cors(corsOptionsDelegate), (req, res) => {
         })
 })
 
-app.get('/explore/:key=:value/:page?', cors(corsOptionsDelegate), (req, res) => {
-    // libgen.search({
-    //     mirror:currentURL,
-    //     query:req.params.value,
-    //     count
-    // })
-    console.log(req.body);
-    res.send(req.params);
-})
+// app.get('/explore/:key=:value/:page?', cors(corsOptionsDelegate), (req, res) => {
+//     // libgen.search({
+//     //     mirror:currentURL,
+//     //     query:req.params.value,
+//     //     count
+//     // })
+//     console.log(req.body);
+//     res.send(req.params);
+// })
 
 app.post('/explore', cors(), jsonParser, (req, res) => {
     req.body.mirror = currentURL
