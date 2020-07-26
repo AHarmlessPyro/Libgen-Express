@@ -8,7 +8,7 @@ const env = require('dotenv').config();
 const port = process.env.PORT || 8008;
 const app = express();
 
-//app.use(cors);
+const fields = "Title,Author,Series,Periodical,Publisher,Year,Identifier,md5,Extension"
 
 var whitelist = ['*']
 
@@ -58,7 +58,7 @@ app.get('/arrivals/:count?', cors(), (req, res) => {
                 idsToPrint += id - i + ",";
             }
         }).then(() => {
-            request(`${currentURL}/json.php?ids=${idsToPrint}&fields=Author,Title,md5,id`, (error, response, body) => {
+            request(`${currentURL}/json.php?ids=${idsToPrint}&fields=${fields}`, (error, response, body) => {
                 if (error) {
                     console.error(error);
                     res.error(404);
