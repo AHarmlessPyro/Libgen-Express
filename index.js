@@ -8,7 +8,7 @@ const env = require('dotenv').config();
 const port = process.env.PORT || 8008;
 const app = express();
 
-const fields = "Title,Author,Series,Periodical,Publisher,Year,Identifier,md5,Extension"
+const fields = "Title,Author,Series,Periodical,Filesize,Publisher,Year,Identifier,md5,Extension"
 
 var whitelist = ['*']
 
